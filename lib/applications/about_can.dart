@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../kits/var_depository.dart';
+import '../kits/toolkits.dart';
 
 class AboutCanPage extends StatelessWidget {
   @override
@@ -29,7 +29,7 @@ class AboutCanPage extends StatelessWidget {
             GestureDetector(
               child: Icon(Icons.help, color: Colors.black,),
               onTap: () {
-                VarDepository.tipsDialog(context, "帮助功能尚未开放");
+                tipsDialog(context, "帮助功能尚未开放");
               },
             ),
             Padding(
@@ -37,7 +37,7 @@ class AboutCanPage extends StatelessWidget {
               child: GestureDetector(
                 child: Icon(Icons.web, color: Colors.black,),
                 onTap: () {
-                  VarDepository.tipsDialog(context, "官网尚未架设");
+                  tipsDialog(context, "官网尚未架设");
                 },
               )
             ),

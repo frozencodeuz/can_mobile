@@ -7,7 +7,7 @@ import 'contact_viewer_page.dart';
 import 'contacts_create_page.dart';
 import 'client.dart';
 import '../kits/user_cache.dart';
-import '../kits/var_depository.dart';
+import '../kits/toolkits.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +36,7 @@ class ClientViewerState extends State<ClientViewerPage> {
         clist.add(e);
       }
     });
-    VarDepository.push(context, Scaffold(
+    push(context, Scaffold(
       appBar: AppBar(
         title: Text("'$text'的搜索结果"),
       ),
@@ -71,7 +71,7 @@ class ClientViewerState extends State<ClientViewerPage> {
                     GestureDetector(
                       child: Icon(Icons.edit),
                       onTap: () {
-                        VarDepository.push(context, ContactViewerPage(clist[index], this));
+                        push(context, ContactViewerPage(clist[index], this));
                       },
                     ),
                     GestureDetector(
@@ -132,7 +132,7 @@ class ClientViewerState extends State<ClientViewerPage> {
           actions: <Widget>[
             GestureDetector(
               child: Icon(Icons.edit),
-              onTap: () => VarDepository.push(context, ClientEditPage(client, userCache, this)),
+              onTap: () => push(context, ClientEditPage(client, userCache, this)),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 20.0),
@@ -151,14 +151,14 @@ class ClientViewerState extends State<ClientViewerPage> {
               iconData: Icons.add,
               suffix: Text("创建自定义项"),
               onPressed: () {
-                VarDepository.push(context, CustomsCreatePage(userCache, this));
+                push(context, CustomsCreatePage(userCache, this));
               },
             ),
             FancyButton(
               iconData: Icons.add,
               suffix: Text("创建联系人"),
               onPressed: () {
-                VarDepository.push(context, ContactsCreatePage(userCache, this));
+                push(context, ContactsCreatePage(userCache, this));
               },
             ),
           ],
@@ -269,7 +269,7 @@ class ClientViewerState extends State<ClientViewerPage> {
                             GestureDetector(
                               child: Icon(Icons.edit),
                               onTap: () {
-                                VarDepository.push(context, ContactViewerPage(client.contacts[index], this));
+                                push(context, ContactViewerPage(client.contacts[index], this));
                               },
                             ),
                             GestureDetector(

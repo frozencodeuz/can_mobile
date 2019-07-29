@@ -9,7 +9,7 @@ import 'clients_create_page.dart';
 import 'client.dart';
 import '../kits/fancy_button.dart';
 import '../kits/user_cache.dart';
-import '../kits/var_depository.dart';
+import '../kits/toolkits.dart';
 
 class ClientsManagementPage extends StatefulWidget {
   String enterprise;
@@ -31,8 +31,7 @@ class ClientsManagementState extends State<ClientsManagementPage> {
     init();
   }
   Future<void> init() async {
-    userCache.conn.callBack = (bytes) {
-      final data = utf8.decode(bytes);
+    userCache.conn.callBack = (data) {
       var parsedJson = json.decode(data);
       clients = List<Client>.from(parsedJson.map((i) => Client.fromJson(i)).toList());
       widgets.clear();
@@ -104,14 +103,14 @@ class ClientsManagementState extends State<ClientsManagementPage> {
     userCache.conn.query("get enterprise_clients $enterprise");
   }
   Future<void> save() async {
-    userCache.conn.callBack = (bytes) {
+    userCache.conn.callBack = (data) {
       return;
     };
     userCache.conn.query("set enterprise_clients $enterprise ${clients2jsonString(clients)}");
   }
   void search(String text) {
     if (text=="") {
-      VarDepository.tipsDialog(context, "搜索内容不能为空");
+      tipsDialog(context, "搜索内容不能为空");
     } else {
       final clist = List<Client>();
       clients.forEach((client) {
@@ -119,7 +118,7 @@ class ClientsManagementState extends State<ClientsManagementPage> {
           clist.add(client);
         }
       });
-      VarDepository.push(context, Scaffold(
+      push(context, Scaffold(
         appBar: AppBar(
           title: Text("'$text'的搜索结果"),
         ),
@@ -185,7 +184,7 @@ class ClientsManagementState extends State<ClientsManagementPage> {
                   )
                 ],
               ),
-              onTap: () => VarDepository.push(context, ClientViewerPage(clist[index], userCache, this)),
+              onTap: () => push(context, ClientViewerPage(clist[index], userCache, this)),
             );
           },
         ),
@@ -236,7 +235,7 @@ class ClientsManagementState extends State<ClientsManagementPage> {
           return ListTile(
             leading: Icon(Icons.business_center),
             title: widgets[index],
-            onTap: () => VarDepository.push(context, ClientViewerPage(clients[index], userCache, this)),
+            onTap: () => push(context, ClientViewerPage(clients[index], userCache, this)),
           );
         },
       ),
@@ -244,7 +243,7 @@ class ClientsManagementState extends State<ClientsManagementPage> {
         suffix: Text("创建客户"),
         iconData: Icons.add,
         onPressed: () {
-          VarDepository.push(context, ClientsCreatePage(enterprise, userCache, this));
+          push(context, ClientsCreatePage(enterprise, userCache, this));
         },
       ),
     );

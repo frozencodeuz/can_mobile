@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../kits/message.dart';
 import '../kits/user_cache.dart';
-import '../kits/var_depository.dart';
+import '../kits/toolkits.dart';
 import '../network/connection.dart';
 
 class TalkPage extends StatefulWidget {
@@ -32,7 +32,8 @@ class _TalkState extends State<TalkPage> {
     init();
   }
   void init() async {
-    msgConn = Connection(await Socket.connect(IP, PORT));
+    msgConn = Connection(IP, PORT);
+    await msgConn.init();
     loadMessages();
     Timer(Duration(milliseconds: 300), () => _scrlCtrlr.jumpTo(_scrlCtrlr.position.maxScrollExtent));
   }
@@ -43,22 +44,21 @@ class _TalkState extends State<TalkPage> {
     msgConn.close();
   }
   void loadMessages() async {
-    msgConn.socket.listen((bytes) {
-      msgConn.callBack(bytes);
-    });
-    msgConn.callBack = (bytes) => loadImpl(bytes);
+    msgConn.callBack = (data) => loadImpl(data);
     msgConn.query("sublogin ${userCache.un} ${userCache.pw}");
     msgConn.query("get allmsgsaboutthem ${talkSettings.to} ${talkSettings.from}");
   }
-  void loadImpl(List<int> bytes) {
-    var data = utf8.decode(bytes);
-    if (data=="0\n") return;
-    if (data=="[]\n") return;
+  void loadImpl(String data) {
+    if (data=="0") return;
+    if (data=="[]") return;
     List<dynamic> parsed;
     try {
       parsed = json.decode(data);
     } catch (e) {
-      msgConn.query("get allmsgsaboutthem ${talkSettings.to} ${talkSettings.from}");
+      try {
+        msgConn.query("get allmsgsaboutthem ${talkSettings.to} ${talkSettings.from}");
+      } catch(e) {
+      }
       return;
     }
     talkshowers.clear();
@@ -99,8 +99,9 @@ class _TalkState extends State<TalkPage> {
     });
   }
   void send(String text) async {
-    userCache.conn.callBack = (bytes) {};
-    userCache.conn.query("send ${text.replaceAll("\"", "").replaceAll(" ", "")} ${userCache.un} ${talkSettings.from==userCache.un?talkSettings.to:talkSettings.from} false ${VarDepository.now()} text");
+    userCache.conn.callBack = (data) {};
+    userCache.conn.query("send ${text.replaceAll("\"", "").replaceAll(" ", "")} ${userCache.un} ${talkSettings.from==userCache.un?talkSettings.to:talkSettings.from} false ${now()} text");
+    _scrlCtrlr.jumpTo(_scrlCtrlr.position.maxScrollExtent);
   }
   TextEditingController tec = TextEditingController();
   @override
@@ -134,7 +135,7 @@ class _TalkState extends State<TalkPage> {
                     },
                     onSubmitted: (text) {
                       if (text=="") {
-                        VarDepository.tipsDialog(context, "消息内容不能为空");
+                        tipsDialog(context, "消息内容不能为空");
                       } else {
                         send(text);
                         tec.clear();
@@ -148,7 +149,7 @@ class _TalkState extends State<TalkPage> {
                   child: Icon(Icons.send),
                   onTap: () {
                     if (tec.text=="") {
-                      VarDepository.tipsDialog(context, "消息内容不能为空");
+                      tipsDialog(context, "消息内容不能为空");
                     } else {
                       send(tec.text);
                       tec.clear();

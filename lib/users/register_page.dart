@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../kits/var_depository.dart';
+import '../kits/toolkits.dart';
 import '../network/connection.dart';
 
 String newUN = "";
@@ -60,18 +60,18 @@ class _RegisterState extends State<RegisterPage> {
                 FlatButton(onPressed: () {
                   //TODO Register Logic
                   if (newPW!=newPWConf) {
-                    VarDepository.snake("两个密码不一致", Scaffold.of(context), 2);
+                    snake("两个密码不一致", Scaffold.of(context), 2);
                     return;
                   } else if (newUN=="") {
-                    VarDepository.snake("用户名不能为空", Scaffold.of(context), 2);
+                    snake("用户名不能为空", Scaffold.of(context), 2);
                     return;
                   } else if (newPW=="") {
-                    VarDepository.snake("密码不能为空", Scaffold.of(context), 2);
+                    snake("密码不能为空", Scaffold.of(context), 2);
                     return;
                   } else if (newUN.indexOf(" ")!=-1) {
-                    VarDepository.snake("用户名不能包含空格", Scaffold.of(context), 2);
+                    snake("用户名不能包含空格", Scaffold.of(context), 2);
                   } else if (newUN.indexOf("\"")!=-1) {
-                    VarDepository.snake("用户名不能包含引号", Scaffold.of(context), 2);
+                    snake("用户名不能包含引号", Scaffold.of(context), 2);
                   } else {
                     register(context);
                   }
@@ -83,19 +83,16 @@ class _RegisterState extends State<RegisterPage> {
     );
   }
   void register(BuildContext context) async {
-    VarDepository.snake("正在注册...", Scaffold.of(context));
-    final connection = Connection(await Socket.connect(IP, PORT));
-    connection.socket.listen((bytes) {
-      connection.callBack(bytes);
-    });
-    connection.callBack = (bytes) {
-      final data = utf8.decode(bytes);
-      if (data=="0\n") {
-        VarDepository.tipsDialog(context, "注册完成", () {
+    snake("正在注册...", Scaffold.of(context));
+    final connection = Connection(IP, PORT);
+    await connection.init();
+    connection.callBack = (data) {
+      if (data=="0") {
+        tipsDialog(context, "注册完成", () {
           Navigator.pop(context);
         });
-      } else if (data=="4\n") {
-        VarDepository.tipsDialog(context, "您的用户名已经被使用过");
+      } else if (data=="4") {
+        tipsDialog(context, "您的用户名已经被使用过");
       }
     };
     connection.query("register $newUN $newPW");

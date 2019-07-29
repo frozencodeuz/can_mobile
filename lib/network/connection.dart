@@ -1,16 +1,32 @@
+import 'dart:convert';
 import 'dart:io';
 
-const String IP = "server.natappfree.cc";
-const int PORT = 43342;
+import 'package:can_mobile/network/data_stack.dart';
+
+const String IP = "barrels277.e2.luyouxia.net";
+const int PORT = 27641;
 
 class Connection {
-  Socket socket;
-  Connection(this.socket);
-  Function(List<int> bytes) callBack = (bytes) {};
+  dynamic host;
+  int port;
+  Connection(this.host, this.port);
+  Function(String data) callBack = (data) {};
+  Socket _socket;
+  DataStack _stack = DataStack();
   void query(String command) {
-    socket.writeln(command);
+    _socket.writeln(command);
   }
-  void close() {
-    socket.close();
+  Future init() async {
+    _socket = await Socket.connect(host, port);
+    _socket.transform(utf8.decoder).listen((data) {
+      // 压栈
+      _stack.append(data);
+      // 计算是否有新消息
+      final next = _stack.nextData();
+      if (next!=null) {
+        callBack(next);
+      }
+    });
   }
+  void close() => _socket.close();
 }

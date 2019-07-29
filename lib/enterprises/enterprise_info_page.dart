@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'enterprise.dart';
 import '../kits/user_cache.dart';
-import '../kits/var_depository.dart';
+import '../kits/toolkits.dart';
 
 class EnterpriseInfoPage extends StatelessWidget {
   Enterprise enterprise;
@@ -20,16 +20,15 @@ class EnterpriseInfoPage extends StatelessWidget {
           CupertinoButton(
             child: Text("加入", style: TextStyle(color: Colors.white),),
             onPressed: () async {
-              userCache.conn.callBack = (bytes) {
-                final data = utf8.decode(bytes);
-                if (data=="\n") {
-                  userCache.conn.callBack = (bytes) {};
+              userCache.conn.callBack = (data) {
+                if (data=="") {
+                  userCache.conn.callBack = (data) {};
                   userCache.conn.query("set joined_enterprises ${enterprise.name}");
                 } else {
-                  userCache.conn.callBack = (bytes) {};
+                  userCache.conn.callBack = (data) {};
                   userCache.conn.query("set joined_enterprises $data ${enterprise.name}");
                 }
-                VarDepository.tipsDialog(context, "您已成功加入该企业", () {
+                tipsDialog(context, "您已成功加入该企业", () {
                   Navigator.pop(context);
                 });
               };

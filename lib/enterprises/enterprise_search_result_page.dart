@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:can_mobile/kits/user_cache.dart';
-import 'package:can_mobile/kits/var_depository.dart';
+import 'package:can_mobile/kits/toolkits.dart';
 import 'package:flutter/material.dart';
 import 'enterprise_info_page.dart';
 import 'enterprise.dart';
@@ -27,8 +27,7 @@ class _EnterpriseSearchResultState extends State<EnterpriseSearchResultPage> {
     init();
   }
   void init() async {
-    userCache.conn.callBack = (bytes) {
-      final data = utf8.decode(bytes);
+    userCache.conn.callBack = (data) {
       List<dynamic> parsed = json.decode(data);
       for (var i in parsed) {
         final Map<String, dynamic> map = i;
@@ -71,7 +70,7 @@ class _EnterpriseSearchResultState extends State<EnterpriseSearchResultPage> {
             leading: Icon(Icons.message),
             title: widgets[index],
             onTap: () {
-              VarDepository.push(context, EnterpriseInfoPage(enterprises[index], userCache));
+              push(context, EnterpriseInfoPage(enterprises[index], userCache));
             }
           );
         }

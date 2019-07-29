@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../kits/var_depository.dart';
+import '../kits/toolkits.dart';
 
 class AndroidStoragePermissionRequestPage extends StatelessWidget {
   AndroidStoragePermissionRequestPage();
@@ -27,7 +27,7 @@ class AndroidStoragePermissionRequestPage extends StatelessWidget {
                   if (status == PermissionStatus.granted) {
                     Navigator.pop(context);
                   } else {
-                    VarDepository.tipsDialog(context, "好像出了点问题, 请您再来一遍");
+                    tipsDialog(context, "好像出了点问题, 请您再来一遍");
                   }
                 },
               ),

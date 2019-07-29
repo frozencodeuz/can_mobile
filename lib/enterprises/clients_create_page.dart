@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:can_mobile/kits/fancy_button.dart';
-import 'package:can_mobile/kits/var_depository.dart';
+import 'package:can_mobile/kits/toolkits.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'clients_management_page.dart';
@@ -146,12 +146,12 @@ class _ClientsCreateState extends State<ClientsCreatePage> {
               FancyButton(
                 iconData: Icons.build,
                 suffix: Text("创建自定义项"),
-                onPressed: () => VarDepository.push(context, _CreateCustomSimplePage(customs)),
+                onPressed: () => push(context, _CreateCustomSimplePage(customs)),
               ),
               FancyButton(
                 iconData: Icons.contacts,
                 suffix: Text("创建联系人"),
-                onPressed: () => VarDepository.push(context, _CreateContactSimplePage(contacts)),
+                onPressed: () => push(context, _CreateContactSimplePage(contacts)),
               ),
             ],
           ),

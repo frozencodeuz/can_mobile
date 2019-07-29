@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'kits/user_cache.dart';
-import 'kits/var_depository.dart';
+import 'kits/toolkits.dart';
 import 'enterprises/enterprise_search_result_page.dart';
 
 class SearchPage extends StatefulWidget {
@@ -169,20 +169,20 @@ class _SearchState extends State<SearchPage> {
   void search(String text) {
     if (text!="") {
       if (_users_color==Colors.blue) {
-        VarDepository.tipsDialog(context, "暂不支持搜索用户");
+        tipsDialog(context, "暂不支持搜索用户");
       } else if (_texts_color==Colors.blue) {
-        VarDepository.tipsDialog(context, "暂不支持搜索文章");
+        tipsDialog(context, "暂不支持搜索文章");
       } else if (_videos_color==Colors.blue) {
-        VarDepository.tipsDialog(context, "暂不支持搜索视频");
+        tipsDialog(context, "暂不支持搜索视频");
       } else if (_enterprises_color==Colors.blue) {
-        VarDepository.push(context, EnterpriseSearchResultPage(text, userCache));
+        push(context, EnterpriseSearchResultPage(text, userCache));
       } else if (_officiallyaccounts_color==Colors.blue) {
-        VarDepository.tipsDialog(context, "暂不支持搜索公众号");
+        tipsDialog(context, "暂不支持搜索公众号");
       } else if (_all_color==Colors.blue) {
-        VarDepository.tipsDialog(context, "暂不支持搜索全部");
+        tipsDialog(context, "暂不支持搜索全部");
       }
     } else {
-      VarDepository.tipsDialog(context, "搜索内容不能为空");
+      tipsDialog(context, "搜索内容不能为空");
     }
   }
 }

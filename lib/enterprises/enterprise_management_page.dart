@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../kits/user_cache.dart';
-import '../kits/var_depository.dart';
+import '../kits/toolkits.dart';
 
 class EnterpriseManagementPage extends StatefulWidget {
   UserCache userCache;
@@ -24,9 +24,8 @@ class _EnterpriseManagementState extends State<EnterpriseManagementPage> {
     init();
   }
   void init() async {
-    userCache.conn.callBack = (bytes) {
-      final data = utf8.decode(bytes);
-      if (data=="null\n"||data==" \n") {
+    userCache.conn.callBack = (data) {
+      if (data=="null"||data=="") {
         enterprises.add(Text("您还暂未加入任何企业 您可以在'搜索'中加入企业"));
         actions.add(() {});
         try {
@@ -49,7 +48,7 @@ class _EnterpriseManagementState extends State<EnterpriseManagementPage> {
                       child: Text("切换到这个企业"),
                       onPressed: () {
                         Navigator.pop(context);
-                        VarDepository.tipsDialog(context, "目前还不支持这个操作");
+                        tipsDialog(context, "目前还不支持这个操作");
                       },
                     ),
                     CupertinoButton(
@@ -67,14 +66,14 @@ class _EnterpriseManagementState extends State<EnterpriseManagementPage> {
                                 CupertinoButton(
                                   child: Text("好"),
                                   onPressed: () async {
-                                      final rsbuff = VarDepository.makeAListString(VarDepository.run<List<String>>(
+                                      final rsbuff = makeAListString(run<List<String>>(
                                         data.substring(0, data.length-1).split(" "),
                                         (it) {
                                           it.remove(enterprise);
                                         }
                                       ));
+                                      userCache.conn.callBack = (data) {};
                                       userCache.conn.query("set joined_enterprises $rsbuff");
-                                      userCache.conn.callBack = (bytes) {};
                                       Navigator.pop(context);
                                       setState(() {});
                                   },

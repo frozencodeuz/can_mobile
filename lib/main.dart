@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'applications/about_can.dart';
 import 'applications/android_storage_permission_request_page.dart';
 import 'kits/user_cache.dart';
-import 'kits/var_depository.dart';
+import 'kits/toolkits.dart';
 import 'network/connection.dart';
 import 'users/register_page.dart';
 
@@ -55,7 +55,7 @@ class _LoginState extends State<LoginPage> {
   }
   void createFiles() async {
     try {
-      final candir = await VarDepository.openCanFolder();
+      final candir = await openCanFolder();
       final cache = Directory("$candir/cache");
       final properties = File("$candir/properties.can");
       if (!cache.existsSync()) {
@@ -65,7 +65,7 @@ class _LoginState extends State<LoginPage> {
         properties.createSync(recursive: true);
       }
     } catch (e) {
-      VarDepository.push(context, AndroidStoragePermissionRequestPage());
+      push(context, AndroidStoragePermissionRequestPage());
     }
   }
   @override
@@ -83,13 +83,13 @@ class _LoginState extends State<LoginPage> {
           leading: GestureDetector(
             child: Icon(Icons.change_history),
             onTap: () {
-              VarDepository.push(context, AboutCanPage());
+              push(context, AboutCanPage());
             },
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
           actions: <Widget>[
-            VarDepository.getCurrentMenuWidget(context),
+            getCurrentMenuWidget(context),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 20.0),
               child: Icon(Icons.format_align_center)
@@ -127,26 +127,21 @@ class _LoginState extends State<LoginPage> {
                         child: Text("登录"),
                         textColor: Colors.blue,
                         onPressed: () async {
-                          VarDepository.snake("正在登录...", Scaffold.of(context));
-                          final connection = Connection(await Socket.connect(IP, PORT));
-                          connection.socket.listen((bytes) {
-                            connection.callBack(bytes);
-                          });
-                          final connection1 = Connection(await Socket.connect(IP, PORT));
-                          connection1.socket.listen((bytes) {
-                            connection1.callBack(bytes);
-                          });
-                          connection1.callBack = (bytes) {
-                            VarDepository.jumpToMainPage(context, UserCache(nowUN, nowPW, connection, connection1));
+                          snake("正在登录...", Scaffold.of(context));
+                          final connection = Connection(IP, PORT);
+                          await connection.init();
+                          final connection1 = Connection(IP, PORT);
+                          await connection1.init();
+                          connection1.callBack = (data) {
+                            jumpToMainPage(context, UserCache(nowUN, nowPW, connection, connection1));
                           };
-                          connection.callBack = (bytes) {
-                            final data = utf8.decode(bytes);
-                            if (data=="0\n") {
+                          connection.callBack = (data) {
+                            if (data=="0") {
                               connection1.query("sublogin $nowUN $nowPW");
-                            } else if (data=="2\n") {
-                              VarDepository.tipsDialog(context, "用户名不存在");
-                            } else if (data=="3\n") {
-                              VarDepository.tipsDialog(context, "密码错误");
+                            } else if (data=="2") {
+                              tipsDialog(context, "用户名不存在");
+                            } else if (data=="3") {
+                              tipsDialog(context, "密码错误");
                             } else print(data);
                           };
                           connection.query("login $nowUN $nowPW");
@@ -156,7 +151,7 @@ class _LoginState extends State<LoginPage> {
                         child: Text("注册"),
                         textColor: Colors.blue,
                         onPressed: () {
-                          VarDepository.push(context, RegisterPage());
+                          push(context, RegisterPage());
                         }
                     ),
                   ],

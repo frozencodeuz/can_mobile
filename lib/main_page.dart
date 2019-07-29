@@ -12,7 +12,7 @@ import 'message/send_page.dart';
 import 'kits/message.dart';
 import 'kits/touch_callback.dart';
 import 'kits/im_item.dart';
-import 'kits/var_depository.dart';
+import 'kits/toolkits.dart';
 import 'main.dart';
 import 'search_page.dart';
 import 'users/person_data_page.dart';
@@ -35,7 +35,6 @@ class _MainPageState extends State<MainPage> {
   VideoPage videoPage;
   EnterprisePage enterprisePage;
   PersonalPage personalPage;
-  notification.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = notification.FlutterLocalNotificationsPlugin();
   @override
   void initState() {
     super.initState();
@@ -46,10 +45,14 @@ class _MainPageState extends State<MainPage> {
     final initializationSettingsAndroid = new notification.AndroidInitializationSettings('app_icon');
     final initializationSettingsIOS = new notification.IOSInitializationSettings();
     final initializationSettings = new notification.InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+    userCache.notification.initialize(initializationSettings, onSelectNotification: onSelectNotification);
   }
   Future onSelectNotification(String payload) async {
     print("Notification Clicked! payload: $payload");
+    if (payload.startsWith("msg ")) {
+      final split = payload.substring(4, payload.length).split(" ");
+      push(context, TalkPage(TalkSettings(split[0], split[1]), userCache));
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -59,7 +62,7 @@ class _MainPageState extends State<MainPage> {
         actions: <Widget>[
           GestureDetector(
             onTap: (() {
-              VarDepository.push(context, SearchPage(userCache));
+              push(context, SearchPage(userCache));
             }),
             child: Icon(Icons.search),
           ),
@@ -67,7 +70,7 @@ class _MainPageState extends State<MainPage> {
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: GestureDetector(
               onTap: (() {
-                VarDepository.push(context, SendPage(userCache));
+                push(context, SendPage(userCache));
               }),
               child: Icon(Icons.chat),
             )
@@ -152,27 +155,12 @@ class _MessageState extends State<MessagePage> {
   }
   void receiveMessages() async {
     final contacts = List<MessageList>();
-    userCache.conn1.callBack = (bytes) => receiveImpl(bytes, contacts);
+    userCache.conn1.callBack = (data) => receiveImpl(data, contacts);
     userCache.conn1.query("get allmsgsaboutme");
   }
   bool allMsg = true;
-  void receiveImpl(List<int> bytes, List<MessageList> contacts) {
-    var data = utf8.decode(bytes);
-    if (data=="0\n") {
-      Future.delayed(Duration(milliseconds: 500), () {
-        try {
-          if (allMsg) {
-            allMsg = false;
-            userCache.conn1.query("get allmsgsaboutme");
-          } else {
-            userCache.conn1.query("get allmsgsaboutme");
-          }
-        } catch (e) {
-        }
-      });
-      return;
-    }
-    if (data=="[]\n") {
+  void receiveImpl(String data, List<MessageList> contacts) {
+    if (data=="[]") {
       Future.delayed(Duration(milliseconds: 500), () {
         try {
           if (allMsg) {
@@ -208,6 +196,19 @@ class _MessageState extends State<MessagePage> {
         map['time'],
       ));
     }
+    if (!allMsg) {
+      for (var msg in messages) {
+        if (msg.from==userCache.un) {
+          continue;
+        }
+        var platformChannelSpecifics = notification.NotificationDetails(
+            notification.AndroidNotificationDetails(
+                userCache.notificationId.toString(), msg.to, msg.content,
+                importance: notification.Importance.Max, priority: notification.Priority.High, ticker: "ticker"), notification.IOSNotificationDetails());
+        userCache.notification.show(userCache.notificationId, msg.from, msg.content, platformChannelSpecifics, payload: "msg ${msg.from} ${msg.to}");
+        userCache.notificationId++;
+      }
+    }
     var found = false;
     for (var msg in messages) {
       for (var contact in contacts) {
@@ -225,15 +226,16 @@ class _MessageState extends State<MessagePage> {
       } else {
         contacts.add(
             MessageList(
-                VarDepository.makeListWithFirstElementSet(msg.content),
+                makeListWithFirstElementSet(msg.content),
                 msg.from,
                 msg.to,
-                VarDepository.makeListWithFirstElementSet(msg.isWithdrew),
-                VarDepository.makeListWithFirstElementSet(msg.time),
+                makeListWithFirstElementSet(msg.isWithdrew),
+                makeListWithFirstElementSet(msg.time),
             )
         );
       }
     }
+    msgshowers.clear();
     for (var msgl in contacts) {
       msgshowers.add(Column(
         children: <Widget>[
@@ -252,7 +254,7 @@ class _MessageState extends State<MessagePage> {
         ],
       ));
       pushToMessagePage.add(() {
-        VarDepository.push(context, TalkPage(TalkSettings(msgl.from, msgl.to), userCache));
+        push(context, TalkPage(TalkSettings(msgl.from, msgl.to), userCache));
       });
     }
     if (allMsg) {
@@ -313,9 +315,8 @@ class _EnterpriseState extends State<EnterprisePage> {
     init();
   }
   void init([VoidCallback after = null]) async {
-    userCache.conn.callBack = (bytes) {
-      final data = utf8.decode(bytes);
-      if (data=="\n") {
+    userCache.conn.callBack = (data) {
+      if (data=="") {
         nowEnterprise = null;
       } else {
         nowEnterprise = data.substring(0, data.length-1).split(" ")[0];
@@ -326,7 +327,7 @@ class _EnterpriseState extends State<EnterprisePage> {
     };
     userCache.conn.query("get joined_enterprises");
   }
-  void showSnakeToAddEnterprise() => VarDepository.snake("您还暂未加入任何企业 您可以在'搜索'中加入企业", Scaffold.of(context), 2);
+  void showSnakeToAddEnterprise() => snake("您还暂未加入任何企业 您可以在'搜索'中加入企业", Scaffold.of(context), 2);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -347,7 +348,7 @@ class _EnterpriseState extends State<EnterprisePage> {
                 ),
                 onTap: () {
                   init(() {
-                    VarDepository.snake("刷新完成", Scaffold.of(context), 2);
+                    snake("刷新完成", Scaffold.of(context), 2);
                   });
                 },
               ),
@@ -375,7 +376,7 @@ class _EnterpriseState extends State<EnterprisePage> {
                   if (nowEnterprise==null) {
                     showSnakeToAddEnterprise();
                   } else {
-                    VarDepository.push(context, ClientsManagementPage(nowEnterprise, userCache));
+                    push(context, ClientsManagementPage(nowEnterprise, userCache));
                   }
                 },
               ),
@@ -400,7 +401,7 @@ class _EnterpriseState extends State<EnterprisePage> {
                   ],
                 ),
                 onTap: () {
-                  VarDepository.push(context, EnterpriseManagementPage(userCache));
+                  push(context, EnterpriseManagementPage(userCache));
                 },
               ),
             ],
@@ -460,7 +461,7 @@ class _PersonalState extends State<PersonalPage> {
                 ],
               ),
               onPressed: () {
-                VarDepository.push(context, PersonDataPage(userCache));
+                push(context, PersonDataPage(userCache));
               },
             ),
           ),
@@ -492,9 +493,8 @@ class _PersonalState extends State<PersonalPage> {
                   icon: Icon(Icons.update),
                   title: '检查更新',
                   onPressed: () {
-                    userCache.conn.callBack = (bytes) {
-                      final data = utf8.decode(bytes);
-                      VarDepository.tipsDialog(context, data);
+                    userCache.conn.callBack = (data) {
+                      tipsDialog(context, data);
                     };
                     userCache.conn.query("verinfo");
                   },
@@ -510,7 +510,7 @@ class _PersonalState extends State<PersonalPage> {
                   icon: Icon(Icons.change_history),
                   title: '关于 Can',
                   onPressed: () {
-                    VarDepository.push(context, AboutCanPage());
+                    push(context, AboutCanPage());
                   },
                 ),
                 Padding(
@@ -524,7 +524,7 @@ class _PersonalState extends State<PersonalPage> {
                   icon: Icon(Icons.exit_to_app),
                   title: '退出登录',
                   onPressed: () {
-                    VarDepository.pushAndRemove(context, LoginPage());
+                    pushAndRemove(context, LoginPage());
                     userCache.conn.query("close");
                     userCache.conn.close();
                     userCache.conn1.query("close");
