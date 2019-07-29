@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'kits/user_cache.dart';
 import 'kits/toolkits.dart';
 import 'network/connection.dart';
 import 'users/register_page.dart';
+import 'constraints.dart';
 
 var nowUN = "";
 var nowPW = "";

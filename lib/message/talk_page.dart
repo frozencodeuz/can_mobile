@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -8,6 +7,7 @@ import '../kits/message.dart';
 import '../kits/user_cache.dart';
 import '../kits/toolkits.dart';
 import '../network/connection.dart';
+import '../constraints.dart';
 
 class TalkPage extends StatefulWidget {
   UserCache userCache;

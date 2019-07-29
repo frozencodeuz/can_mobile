@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:can_mobile/network/data_stack.dart';
-
-const String IP = "barrels277.e2.luyouxia.net";
-const int PORT = 27641;
+import 'data_stack.dart';
+import '../constraints.dart';
 
 class Connection {
   dynamic host;
