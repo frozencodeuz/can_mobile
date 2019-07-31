@@ -9,7 +9,7 @@
 
 - 请下载本项目，并将它解压。
 
-- 请配置好can_mobile的服务器，can_mobile的服务器暂未开源，请稍等几天。
+- 请配置好can_mobile的服务器，详见[warpin_server](https://github.com/warpinstudio/warpin_server)
 
 - 请在 can_mobile/lib/constraints.dart 中输入您服务器的IP号以及端口号
 
