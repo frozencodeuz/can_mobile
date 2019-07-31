@@ -6,7 +6,8 @@ class Client {
   String scale;
   List<Custom> custom;
   List<Contact> contacts;
-  Client({this.name, this.local, this.phone, this.type, this.scale, this.custom, this.contacts});
+  List<Record> records;
+  Client({this.name, this.local, this.phone, this.type, this.scale, this.custom, this.contacts, this.records});
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
       name: json['name'],
@@ -16,6 +17,7 @@ class Client {
       scale: json['scale'],
       custom: List<Custom>.from(json['custom'].map((i) => Custom.fromJson(i)).toList()),
       contacts: List<Contact>.from(json['contacts'].map((i) => Contact.fromJson(i)).toList()),
+      records: List<Record>.from(json['records'].map((i) => Record.fromJson(i)).toList()),
     );
   }
   String toJSONString() {
@@ -31,7 +33,13 @@ class Client {
       buffcu.write(", ");
     }
     final buffstrcu = buffcu.toString();
-    return "{\"name\": \"$name\", \"local\": \"$local\", \"phone\": \"$phone\", \"type\": \"$type\", \"scale\": \"$scale\", \"custom\":[${buffstrcu==""?"":buffstrcu.substring(0, buffstrcu.length-2)}], \"contacts\": [${buffstrco==""?"":buffstrco.substring(0, buffstrco.length-2)}]}";
+    final buffre = StringBuffer("");
+    for (var i in custom) {
+      buffre.write(i.toJSONString());
+      buffre.write(", ");
+    }
+    final buffstrre = buffre.toString();
+    return "{\"name\": \"$name\", \"local\": \"$local\", \"phone\": \"$phone\", \"type\": \"$type\", \"scale\": \"$scale\", \"custom\":[${buffstrcu==""?"":buffstrcu.substring(0, buffstrcu.length-2)}], \"contacts\": [${buffstrco==""?"":buffstrco.substring(0, buffstrco.length-2)}], \"records\": [${buffstrre==""?"":buffstrre.substring(0, buffstrre.length-2)}]}";
   }
 }
 
@@ -61,6 +69,27 @@ class Custom {
     );
   }
   String toJSONString() => "{\"key\": \"$key\", \"value\": \"$value\"}";
+}
+
+class Record {
+  String content;
+  String time;
+  String method;
+  String contact;
+  String state;
+  String nextTime;
+  Record({this.content, this.time, this.method, this.contact, this.state, this.nextTime});
+  factory Record.fromJson(Map<String, dynamic> json) {
+    return Record(
+      content: json['content'],
+      time: json['time'],
+      method: json['method'],
+      contact: json['contact'],
+      state: json['state'],
+      nextTime: json['nextTime'],
+    );
+  }
+  String toJSONString() => "{\"content\": \"$content\", \"time\": \"$time\", \"method\": \"$method\", \"contact\": \"$contact\", \"state\": \"$state\", \"nextTime\": \"$nextTime\"}";
 }
 
 String clients2jsonString(List<Client> clients) {

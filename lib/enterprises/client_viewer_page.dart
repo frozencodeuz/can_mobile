@@ -116,9 +116,9 @@ class ClientViewerState extends State<ClientViewerPage> {
     ));
   }
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: Text(client.name),
@@ -127,6 +127,7 @@ class ClientViewerState extends State<ClientViewerPage> {
               Tab(icon: Icon(Icons.dashboard), text: "基础信息",),
               Tab(icon: Icon(Icons.contacts), text: "联系人",),
               Tab(icon: Icon(Icons.fiber_smart_record), text: "跟踪记录",),
+              Tab(icon: Icon(Icons.settings), text: "设置",),
             ],
           ),
           actions: <Widget>[
@@ -145,23 +146,64 @@ class ClientViewerState extends State<ClientViewerPage> {
             ),
           ],
         ),
-        floatingActionButton: ButtonBar(
-          children: <Widget>[
-            FancyButton(
-              iconData: Icons.add,
-              suffix: Text("创建自定义项"),
-              onPressed: () {
-                push(context, CustomsCreatePage(userCache, this));
-              },
-            ),
-            FancyButton(
-              iconData: Icons.add,
-              suffix: Text("创建联系人"),
-              onPressed: () {
-                push(context, ContactsCreatePage(userCache, this));
-              },
-            ),
-          ],
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.blue,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  FlatButton(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.build),
+                        Text("创建自定义项"),
+                      ],
+                    ),
+                    onPressed: () {
+                      push(context, CustomsCreatePage(userCache, this));
+                    },
+                  ),
+                  FlatButton(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.add),
+                        Text("创建联系人"),
+                      ],
+                    ),
+                    onPressed: () {
+                      push(context, ContactsCreatePage(userCache, this));
+                    },
+                  ),
+                  FlatButton(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.create),
+                        Text("写跟进")
+                      ],
+                    ),
+                    onPressed: () {
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                  ),
+                  Text(client.name),
+                  Expanded(
+                    child: Container(),
+                  ),
+                  Text("客户管理系统"),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         body: TabBarView(
           children: <Widget>[
@@ -313,6 +355,44 @@ class ClientViewerState extends State<ClientViewerPage> {
               ],
             ),
             Text("跟踪记录"),
+            Column(
+              children: <Widget>[
+                FlatButton(
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  child: Text("删除客户"),
+                  onPressed: () {
+                    showDialog<void>(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return CupertinoAlertDialog(
+                            title: Text("提示"),
+                            content: Text("您确定要删除这个客户吗?"),
+                            actions: <Widget>[
+                              CupertinoButton(
+                                child: Text("不了"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              CupertinoButton(
+                                child: Text("好"),
+                                onPressed: () {
+                                  parent.clients.remove(client);
+                                  parent.save();
+                                  Navigator.pop(context);
+                                  Navigator.pop(buildContext);
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                    );
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),

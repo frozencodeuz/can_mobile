@@ -9,6 +9,9 @@
 .history
 .svn/
 
+#JKS Key
+my-release-key.jks
+
 # IntelliJ related
 *.iml
 *.ipr

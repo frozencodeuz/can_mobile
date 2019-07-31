@@ -80,6 +80,7 @@ class _ClientsCreateState extends State<ClientsCreatePage> {
                     scale: map[4],
                     custom: customs,
                     contacts: contacts,
+                    records: List(),
                   ));
                   parent.save();
                   Navigator.pop(context);
