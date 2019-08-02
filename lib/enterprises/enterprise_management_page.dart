@@ -66,12 +66,7 @@ class _EnterpriseManagementState extends State<EnterpriseManagementPage> {
                                 CupertinoButton(
                                   child: Text("好"),
                                   onPressed: () async {
-                                      final rsbuff = makeAListString(run<List<String>>(
-                                        data.substring(0, data.length-1).split(" "),
-                                        (it) {
-                                          it.remove(enterprise);
-                                        }
-                                      ));
+                                      final rsbuff = makeAListString(data.substring(0, data.length-1).split(" ")..remove(enterprise));
                                       userCache.conn.callBack = (data) {};
                                       userCache.conn.query("set joined_enterprises $rsbuff");
                                       Navigator.pop(context);

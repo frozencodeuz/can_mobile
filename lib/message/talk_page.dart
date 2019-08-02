@@ -100,7 +100,7 @@ class _TalkState extends State<TalkPage> {
   }
   void send(String text) async {
     userCache.conn.callBack = (data) {};
-    userCache.conn.query("send ${text.replaceAll("\"", "").replaceAll(" ", "")} ${userCache.un} ${talkSettings.from==userCache.un?talkSettings.to:talkSettings.from} false ${now()} text");
+    userCache.conn.query("send ${text.replaceAll("\"", "").replaceAll(" ", "")} ${userCache.un} ${talkSettings.from==userCache.un?talkSettings.to:talkSettings.from} false ${DateTime.now()} text");
     _scrlCtrlr.jumpTo(_scrlCtrlr.position.maxScrollExtent);
   }
   TextEditingController tec = TextEditingController();

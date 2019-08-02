@@ -9,10 +9,6 @@ import 'package:device_info/device_info.dart' as device_info;
 import '../main_page.dart';
 import 'user_cache.dart';
 
-String now() {
-  final time = DateTime.now().toString().replaceAll(" ", ";");
-  return time.substring(0, time.length-3);
-}
 String makeAListString<E>(List<E> list) {
   StringBuffer sb = StringBuffer("");
   for (var i=0;i<sb.length;i++) {
@@ -22,13 +18,6 @@ String makeAListString<E>(List<E> list) {
     }
   }
   return sb.toString();
-}
-E run<E> (E e, void Function(E e) action) {
-  action(e);
-  return e;
-}
-runAsync<E> (E e, void Function(E e) action) async {
-  action(e);
 }
 void tipsDialog(BuildContext context, String tip, [VoidCallback onOkClicked = null]) {
   showDialog<void>(
@@ -71,9 +60,6 @@ pushAndRemove(BuildContext context, Widget widget) {
           (route) => route == null
   );
 }
-jumpToMainPage(BuildContext context, UserCache userCache) async {
-  pushAndRemove(context, MainPage(userCache));
-}
 push(BuildContext context, Widget widget) {
   Navigator.push(context, MaterialPageRoute(builder: (Context) => widget));
 }
@@ -95,22 +81,13 @@ Widget getCurrentMenuWidget(BuildContext context) => GestureDetector(
           value: 0,
           child: Row(
               children: <Widget>[
-                Icon(Icons.functions),
-                Text("服务器源")
-              ]
-          ),
-        ),
-        PopupMenuItem<int>(
-          value: 1,
-          child: Row(
-              children: <Widget>[
                 Icon(Icons.update),
                 Text("检查更新")
               ]
           ),
         ),
         PopupMenuItem<int>(
-          value: 2,
+          value: 1,
           child: Row(
               children: <Widget>[
                 Icon(Icons.folder),
@@ -121,10 +98,8 @@ Widget getCurrentMenuWidget(BuildContext context) => GestureDetector(
       ],
     );
     if (result==0) {
-      tipsDialog(context, "非常抱歉, 您的Can默认由Warpin运营, 无法修改");
-    } else if (result==1) {
       tipsDialog(context, "非常抱歉, 暂不支持检查更新");
-    } else if (result==2) {
+    } else if (result==1) {
       openCanFolder().then((folder) async {
         if (Platform.isIOS&&(double.parse((await device_info.DeviceInfoPlugin().iosInfo).systemVersion)<11)) {
           push(context, QuartzPage(

@@ -34,7 +34,7 @@ class Client {
     }
     final buffstrcu = buffcu.toString();
     final buffre = StringBuffer("");
-    for (var i in custom) {
+    for (var i in records) {
       buffre.write(i.toJSONString());
       buffre.write(", ");
     }

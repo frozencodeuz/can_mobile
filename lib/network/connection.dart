@@ -16,7 +16,12 @@ class Connection {
   }
   Future init() async {
     _socket = await Socket.connect(host, port);
-    _socket.transform(utf8.decoder).listen((data) {
+    _socket.listen((bytes) {
+      String data;
+      try {
+        data = utf8.decode(bytes);
+      } catch (e) {
+      }
       // 压栈
       _stack.append(data);
       // 计算是否有新消息

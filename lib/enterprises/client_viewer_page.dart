@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:can_mobile/enterprises/client_edit_page.dart';
+import 'package:can_mobile/enterprises/records_create_page.dart';
 
 import 'clients_management_page.dart';
 import 'contact_viewer_page.dart';
@@ -148,59 +149,46 @@ class ClientViewerState extends State<ClientViewerPage> {
         ),
         bottomNavigationBar: BottomAppBar(
           color: Colors.blue,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Row(
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  FlatButton(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.build),
-                        Text("创建自定义项"),
-                      ],
-                    ),
-                    onPressed: () {
-                      push(context, CustomsCreatePage(userCache, this));
-                    },
-                  ),
-                  FlatButton(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.add),
-                        Text("创建联系人"),
-                      ],
-                    ),
-                    onPressed: () {
-                      push(context, ContactsCreatePage(userCache, this));
-                    },
-                  ),
-                  FlatButton(
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.create),
-                        Text("写跟进")
-                      ],
-                    ),
-                    onPressed: () {
-                    },
-                  ),
-                ],
+              FlatButton(
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.build),
+                    Text("创建自定义项"),
+                  ],
+                ),
+                onPressed: () {
+                  push(context, CustomsCreatePage(userCache, this));
+                },
               ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                  ),
-                  Text(client.name),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  Text("客户管理系统"),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                  ),
-                ],
+              Expanded(
+                child: Text(""),
+              ),
+              FlatButton(
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.contacts),
+                    Text("创建联系人"),
+                  ],
+                ),
+                onPressed: () {
+                  push(context, ContactsCreatePage(userCache, this));
+                },
+              ),
+              Expanded(
+                child: Text(""),
+              ),
+              FlatButton(
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.create),
+                    Text("写跟进")
+                  ],
+                ),
+                onPressed: () {
+                  push(context, RecordsCreatePage(userCache, this));
+                },
               ),
             ],
           ),
@@ -354,7 +342,61 @@ class ClientViewerState extends State<ClientViewerPage> {
                 ),
               ],
             ),
-            Text("跟踪记录"),
+            ListView.builder(
+              itemCount: client.records.length,
+              itemBuilder: (context, index) {
+                final i = client.records[index];
+                return ListTile(
+                  title: Card(
+                    color: Colors.orange,
+                    elevation: 3.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(i.content),
+                        Text("跟进状态: ${i.state}"),
+                        Text("跟进方式: ${i.method}"),
+                        Text("本次跟进时间: ${i.time}"),
+                        Text("下次跟进时间: ${i.nextTime}"),
+                        Text("联系人: ${i.contact}")
+                      ],
+                    ),
+                  ),
+                  trailing: GestureDetector(
+                    child: Icon(Icons.delete),
+                    onTap: () {
+                      showDialog(
+                        context: buildContext,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return CupertinoAlertDialog(
+                            title: Text("真的要删除这个跟踪记录吗"),
+                            content: Text("一旦删除 不可恢复 !"),
+                            actions: <Widget>[
+                              CupertinoButton(
+                                child: Text("不了"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              CupertinoButton(
+                                child: Text("好"),
+                                onPressed: () {
+                                  setState(() {
+                                    client.records.remove(i);
+                                  });
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
             Column(
               children: <Widget>[
                 FlatButton(

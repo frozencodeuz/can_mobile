@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../kits/user_cache.dart';
-import '../kits/toolkits.dart';
 
 String nowReceiver;
 String nowContent;
@@ -39,7 +38,7 @@ class SendPage extends StatelessWidget {
             child: Text("发送"),
             onPressed: () async {
               userCache.conn.query(
-              "send ${nowContent.replaceAll(" ", "")} ${userCache.un} $nowReceiver false ${now()} text");
+              "send ${nowContent.replaceAll(" ", "")} ${userCache.un} $nowReceiver false ${DateTime.now()} text");
               userCache.conn.callBack = (data) {};
               Navigator.pop(context);
             },

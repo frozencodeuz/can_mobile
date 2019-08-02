@@ -10,6 +10,7 @@ import 'kits/toolkits.dart';
 import 'network/connection.dart';
 import 'users/register_page.dart';
 import 'constraints.dart';
+import 'main_page.dart';
 
 var nowUN = "";
 var nowPW = "";
@@ -30,10 +31,15 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]);
-  ErrorWidget.builder = (FlutterErrorDetails flutterErrorDetails) {
-    //print(flutterErrorDetails.toString());
-    return Center(
-      child: Text("您的 Can 遇到错误, 需要重新启动"),
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text("您的 Can 遇到错误, 需要重新启动"),
+        ],
+      ),
     );
   };
   runApp(MyApp());
@@ -132,8 +138,8 @@ class _LoginState extends State<LoginPage> {
                           await connection.init();
                           final connection1 = Connection(IP, PORT);
                           await connection1.init();
-                          connection1.callBack = (data) {
-                            jumpToMainPage(context, UserCache(nowUN, nowPW, connection, connection1));
+                          connection1.callBack = (data) async {
+                            pushAndRemove(context, MainPage(UserCache(nowUN, nowPW, connection, connection1)));
                           };
                           connection.callBack = (data) {
                             if (data=="0") {
