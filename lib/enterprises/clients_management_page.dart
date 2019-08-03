@@ -32,7 +32,7 @@ class ClientsManagementState extends State<ClientsManagementPage> {
   }
   Future<void> init() async {
     userCache.conn.callBack = (data) {
-      var parsedJson = json.decode(data);
+      final parsedJson = json.decode(data);
       clients = List<Client>.from(parsedJson.map((i) => Client.fromJson(i)).toList());
       widgets.clear();
       for (var i in clients) {

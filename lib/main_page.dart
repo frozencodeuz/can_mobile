@@ -319,7 +319,7 @@ class _EnterpriseState extends State<EnterprisePage> {
       if (data=="") {
         nowEnterprise = null;
       } else {
-        nowEnterprise = data.substring(0, data.length-1).split(" ")[0];
+        nowEnterprise = data.split(" ")[0];
       }
       if (after!=null) {
         after();
