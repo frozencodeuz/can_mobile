@@ -36,6 +36,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.2"
+  circle_progress:
+    dependency: "direct main"
+    description:
+      name: circle_progress
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.1"
   collection:
     dependency: transitive
     description:
@@ -57,6 +64,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.6"
+  cupertino_icons:
+    dependency: "direct main"
+    description:
+      name: cupertino_icons
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.2"
   device_info:
     dependency: "direct main"
     description:

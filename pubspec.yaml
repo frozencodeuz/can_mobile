@@ -26,6 +26,7 @@ dependencies:
   flutter_markdown: ^0.2.0
   device_info: ^0.4.0+2
   flutter_datetime_picker: ^1.2.5
+  circle_progress: ^0.0.1
   quartz_doc:
     path: /Users/resetpower/quartz_doc
   flutter:
@@ -33,7 +34,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  # cupertino_icons: ^0.1.2
+  cupertino_icons: ^0.1.0
 
 dev_dependencies:
   flutter_test:

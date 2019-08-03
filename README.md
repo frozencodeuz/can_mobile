@@ -1,6 +1,8 @@
 # can_mobile
 *本项目运行时需要Warpin软件服务器支持，详见[warpin_server](https://github.com/warpinstudio/warpin_server)
 
+*温馨提示: 如果新版本Can的commit注释带有'\*'，请将服务器升级到最新版本来使用它！
+
 一个用Flutter编写的im与crm集成的Android/iOS跨平台应用 can_web的移动版
 ## 上手指南
 以下指南将帮助你在本地机器上安装和运行该项目，进行二次开发和测试。

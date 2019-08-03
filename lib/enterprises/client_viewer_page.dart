@@ -384,6 +384,7 @@ class ClientViewerState extends State<ClientViewerPage> {
                                 onPressed: () {
                                   setState(() {
                                     client.records.remove(i);
+                                    parent.save();
                                   });
                                   Navigator.pop(context);
                                 },

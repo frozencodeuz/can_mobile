@@ -171,6 +171,8 @@ class _RecordsCreateState extends State<RecordsCreatePage> {
                   onPressed: () {
                     if (map[2]==null) {
                       tipsDialog(context, "您还没有联系人, 请返回创建一个");
+                    } else if (map[0]==null) {
+                      tipsDialog(context, "内容不能为空");
                     } else {
                       parent.client.records.insert(0, Record(
                         content: map[0],
