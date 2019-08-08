@@ -1,5 +1,5 @@
 # can_mobile
-一个用Flutter编写的im与crm集成的Android/iOS跨平台应用 can_web的移动版
+一个用Flutter编写的im与crm集成的Android/iOS跨平台应用 can_desktop的移动版
 
 温馨提示：如果您发现更新后出现问题，请尝试将服务器更新到最新版本，如果还有问题，请一定要提issue
 ## 上手指南
