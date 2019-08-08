@@ -1,9 +1,9 @@
+import 'package:can_mobile/widget/user_tile.dart';
 import 'package:flutter/material.dart';
 
 import '../kits/toolkits.dart';
-import '../kits/im_item.dart';
+import '../widget/im_item.dart';
 import '../kits/user_cache.dart';
-import '../kits/touch_callback.dart';
 import '../users/person_data_page.dart';
 import '../applications/about_can.dart';
 import '../main.dart';
@@ -27,39 +27,13 @@ class _PersonalState extends State<PersonalPage> {
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          Container(
-            margin: const EdgeInsets.only(top: 20.0),
-            color: Colors.white,
-            height: 80.0,
-            child: TouchCallBack(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(left: 12.0, right: 15.0),
-                    child: Image.asset("images/defaultusericon.png"),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          userCache.un,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color: Color(0xFF353535),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              onPressed: () {
-                push(context, PersonDataPage(userCache));
-              },
-            ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 15),
+          ),
+          UserTile(
+            userCache,
+            userCache.un,
+            () => push(context, PersonDataPage(userCache)),
           ),
           Container(
             margin: const EdgeInsets.only(top: 20.0),

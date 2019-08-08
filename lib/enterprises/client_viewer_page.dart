@@ -12,7 +12,7 @@ import '../kits/toolkits.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../kits/fancy_button.dart';
+import '../widget/fancy_button.dart';
 import 'customs_create_page.dart';
 
 class ClientViewerPage extends StatefulWidget {

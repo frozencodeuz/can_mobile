@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../kits/message.dart';
+import 'message.dart';
 import '../kits/user_cache.dart';
 import '../kits/toolkits.dart';
 import '../network/connection.dart';
@@ -26,6 +26,7 @@ class _TalkState extends State<TalkPage> {
   List<Widget> talkshowers = List();
   final _scrlCtrlr = ScrollController();
   Connection msgConn;
+  var sent = true;
   @override
   void initState() {
     super.initState();
@@ -99,7 +100,14 @@ class _TalkState extends State<TalkPage> {
     });
   }
   void send(String text) async {
-    userCache.conn.callBack = (data) {};
+    setState(() {
+      sent = false;
+    });
+    userCache.conn.callBack = (data) {
+      setState(() {
+        sent = true;
+      });
+    };
     userCache.conn.query("send ${text.replaceAll("\"", "").replaceAll(" ", "")} ${userCache.un} ${talkSettings.from==userCache.un?talkSettings.to:talkSettings.from} false ${DateTime.now()} text");
     _scrlCtrlr.jumpTo(_scrlCtrlr.position.maxScrollExtent);
   }
@@ -145,7 +153,7 @@ class _TalkState extends State<TalkPage> {
               ),
               Padding(
                 padding: EdgeInsets.only(right: 15),
-                child: GestureDetector(
+                child: sent?GestureDetector(
                   child: Icon(Icons.send),
                   onTap: () {
                     if (tec.text=="") {
@@ -155,7 +163,7 @@ class _TalkState extends State<TalkPage> {
                       tec.clear();
                     }
                   },
-                ),
+                ):CircularProgressIndicator(),
               ),
             ],
           ),

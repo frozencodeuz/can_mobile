@@ -6,7 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart' as
 import '../message/talk_page.dart';
 import '../kits/user_cache.dart';
 import '../kits/toolkits.dart';
-import '../kits/message.dart';
+import '../message/message.dart';
 
 class MessagePage extends StatefulWidget {
   UserCache userCache;

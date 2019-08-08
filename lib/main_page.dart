@@ -7,7 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart' as
 
 import 'kits/user_cache.dart';
 import 'message/send_page.dart';
-import 'kits/message.dart';
+import 'message/message.dart';
 import 'kits/toolkits.dart';
 import 'search_page.dart';
 import 'message/talk_page.dart';
@@ -67,10 +67,19 @@ class _MainPageState extends State<MainPage> {
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: GestureDetector(
               onTap: (() {
+                //TODO Goto Notifications
+              }),
+              child: Icon(Icons.notifications),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: GestureDetector(
+              onTap: (() {
                 push(context, SendPage(userCache));
               }),
               child: Icon(Icons.chat),
-            )
+            ),
           ),
         ],
       ),

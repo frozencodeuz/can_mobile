@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:can_mobile/kits/fancy_button.dart';
+import 'package:can_mobile/widget/fancy_button.dart';
 import 'package:can_mobile/kits/toolkits.dart';
 import 'package:flutter/cupertino.dart';
 
