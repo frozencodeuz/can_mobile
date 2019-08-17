@@ -259,7 +259,7 @@ packages:
   quartz_doc:
     dependency: "direct main"
     description:
-      path: "/Users/resetpower/quartz_doc/"
+      path: "/Users/resetpower/ideaProjects/quartz_doc"
       relative: false
     source: path
     version: "0.0.1"

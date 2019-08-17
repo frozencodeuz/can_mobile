@@ -28,7 +28,7 @@ dependencies:
   flutter_datetime_picker: ^1.2.5
   circle_progress: ^0.0.1
   quartz_doc:
-    path: /Users/resetpower/quartz_doc
+    path: /Users/resetpower/ideaProjects/quartz_doc
   flutter:
     sdk: flutter
 

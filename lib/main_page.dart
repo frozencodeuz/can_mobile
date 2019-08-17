@@ -9,11 +9,9 @@ import 'kits/user_cache.dart';
 import 'message/send_page.dart';
 import 'message/message.dart';
 import 'kits/toolkits.dart';
-import 'search_page.dart';
 import 'message/talk_page.dart';
 import 'fragments/message_page.dart';
 import 'fragments/world_page.dart';
-import 'fragments/enterprise_page.dart';
 import 'fragments/personal_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -30,14 +28,12 @@ class _MainPageState extends State<MainPage> {
   var appBarTitle = "消息";
   MessagePage messagePage;
   WorldPage worldPage;
-  EnterprisePage enterprisePage;
   PersonalPage personalPage;
   @override
   void initState() {
     super.initState();
     messagePage = MessagePage(userCache);
     worldPage = WorldPage(userCache);
-    enterprisePage = EnterprisePage(userCache);
     personalPage = PersonalPage(userCache);
     final initializationSettingsAndroid = new notification.AndroidInitializationSettings('app_icon');
     final initializationSettingsIOS = new notification.IOSInitializationSettings();
@@ -57,21 +53,6 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text(appBarTitle),
         actions: <Widget>[
-          GestureDetector(
-            onTap: (() {
-              push(context, SearchPage(userCache));
-            }),
-            child: Icon(Icons.search),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-            child: GestureDetector(
-              onTap: (() {
-                //TODO Goto Notifications
-              }),
-              child: Icon(Icons.notifications),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: GestureDetector(
@@ -104,10 +85,6 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.account_balance),
           ),
           BottomNavigationBarItem(
-            title: Text("企业"),
-            icon: Icon(Icons.business_center),
-          ),
-          BottomNavigationBarItem(
             title: Text("我"),
             icon: Icon(Icons.person),
           ),
@@ -123,8 +100,6 @@ class _MainPageState extends State<MainPage> {
       case 1:
         return worldPage;
       case 2:
-        return enterprisePage;
-      case 3:
         return personalPage;
     }
   }
@@ -135,8 +110,6 @@ class _MainPageState extends State<MainPage> {
       case 1:
         return "世界";
       case 2:
-        return "企业";
-      case 3:
         return "我";
     }
   }
