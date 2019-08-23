@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'touch_callback.dart';
 
-//通用列表项
-class ImItem extends StatelessWidget{
-  //标题
+class ImItem extends StatelessWidget {
   final String title;
-  //图片路径
   final String imagePath;
-  //图标
   final Icon icon;
 
   final VoidCallback onPressed;
@@ -39,7 +35,6 @@ class ImItem extends StatelessWidget{
               ),
               margin: const EdgeInsets.only(left: 22.0,right: 20.0),
             ),
-            //标题
             Text(
               title,
               style: TextStyle(fontSize: 16.0,color: Color(0xFF353535)),
