@@ -12,15 +12,12 @@ class ImItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return TouchCallBack(
       onPressed: this.onPressed,
-      //展示部分
       child: Container(
         height: 50.0,
         child: Row(
           children: <Widget>[
-            //图标或图片
             Container(
               child: imagePath != null
                   ? Image.asset(
