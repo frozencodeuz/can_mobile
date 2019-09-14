@@ -43,6 +43,7 @@ void main() {
     );
   };
   runApp(MyApp());
+  __loginState.autoLogin();
   SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 }
@@ -52,18 +53,21 @@ class LoginPage extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
+_LoginState __loginState;
+
 class _LoginState extends State<LoginPage> {
   _LoginState();
   @override
   void initState() {
     super.initState();
     createFiles();
+    __loginState = this;
   }
   void createFiles() async {
     try {
       final candir = await openCanFolder();
       final cache = Directory("$candir/cache");
-      final properties = File("$candir/properties.can");
+      final properties = File("$candir/can.properties");
       if (!cache.existsSync()) {
         cache.createSync(recursive: true);
       }
@@ -72,6 +76,41 @@ class _LoginState extends State<LoginPage> {
       }
     } catch (e) {
       push(context, AndroidStoragePermissionRequestPage());
+    }
+  }
+  void autoLogin() async {
+    final candir = await openCanFolder();
+    final read = File("$candir/can.properties").readAsLinesSync();
+    String un;
+    String pw;
+    if (read.isNotEmpty) {
+      for (final ln in read) {
+        final sp = ln.split("=");
+        switch (sp[0]) {
+          case "username":un=sp[1];break;
+          case "password":pw=sp[1];break;
+        }
+      }
+    }
+    if (un!=null&&pw!=null) {
+      microTip(context, "正在登录...");
+      final connection = Connection(IP, PORT);
+      await connection.init();
+      final connection1 = Connection(IP, PORT);
+      await connection1.init();
+      connection1.callBack = (data) async {
+        pushAndRemove(context, MainPage(UserCache(un, pw, connection, connection1)));
+      };
+      connection.callBack = (data) {
+        if (data=="0") {
+          connection1.query("sublogin $un $pw");
+        } else if (data=="2") {
+          tipsDialog(context, "用户名不存在");
+        } else if (data=="3") {
+          tipsDialog(context, "密码错误");
+        } else print(data);
+      };
+      connection.query("login $un $pw");
     }
   }
   @override

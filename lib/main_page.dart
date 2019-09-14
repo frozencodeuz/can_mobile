@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,9 @@ class _MainPageState extends State<MainPage> {
     messagePage = MessagePage(userCache);
     worldPage = WorldPage(userCache);
     personalPage = PersonalPage(userCache);
+    openCanFolder().then((f) {
+      File("$f/can.properties").writeAsStringSync("username=${userCache.un}\npassword=${userCache.pw}");
+    });
     final initializationSettingsAndroid = new notification.AndroidInitializationSettings('app_icon');
     final initializationSettingsIOS = new notification.IOSInitializationSettings();
     final initializationSettings = new notification.InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
