@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:can_mobile/applications/applications_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -57,12 +57,18 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text(appBarTitle),
         actions: <Widget>[
+          GestureDetector(
+            child: Icon(Icons.apps),
+            onTap: () {
+              push(context, ApplicationsPage());
+            },
+          ),
           Padding(
-            padding: const EdgeInsets.only(right: 10.0),
+            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: GestureDetector(
-              onTap: (() {
+              onTap: () {
                 push(context, SendPage(userCache));
-              }),
+              },
               child: Icon(Icons.chat),
             ),
           ),

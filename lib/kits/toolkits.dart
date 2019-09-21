@@ -115,13 +115,17 @@ Widget getCurrentMenuWidget(BuildContext context) => GestureDetector(
     }
   },
 );
+
 void microTip(BuildContext context, String tip) {
   showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         Future.delayed(Duration(seconds: 2), () {
-          Navigator.pop(context);
+          try {
+            Navigator.pop(context);
+          } catch(e) {
+          }
         });
         return CupertinoAlertDialog(
           title: Text("提示"),

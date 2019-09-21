@@ -27,6 +27,7 @@ dependencies:
   device_info: ^0.4.0+2
   flutter_datetime_picker: ^1.2.5
   circle_progress: ^0.0.1
+  webview_flutter: ^0.3.14+1
   quartz_doc:
     path: /Users/resetpower/ideaProjects/quartz_doc
   flutter:

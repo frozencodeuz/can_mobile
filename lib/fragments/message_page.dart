@@ -11,6 +11,9 @@ import '../message/message.dart';
 class MessagePage extends StatefulWidget {
   UserCache userCache;
   MessagePage(this.userCache);
+  final contacts = List<MessageList>();
+  bool isLoaded = false;
+  bool allMsg = true;
   @override
   _MessageState createState() => _MessageState(userCache);
 }
@@ -21,22 +24,27 @@ class _MessageState extends State<MessagePage> {
   List<Widget> msgshowers = List();
   List<VoidCallback> pushToMessagePage = List();
   @override
-  initState() {
+  void initState() {
     super.initState();
-    receiveMessages();
+    if (!widget.isLoaded) {
+      receiveMessages();
+      widget.isLoaded = true;
+    } else {
+      setState(() {
+        updateMessageShowers();
+      });
+    }
   }
   void receiveMessages() async {
-    final contacts = List<MessageList>();
-    userCache.conn1.callBack = (data) => receiveImpl(data, contacts);
+    userCache.conn1.callBack = (data) => receiveImpl(data);
     userCache.conn1.query("get allmsgsaboutme");
   }
-  bool allMsg = true;
-  void receiveImpl(String data, List<MessageList> contacts) {
+  void receiveImpl(String data) {
     if (data=="[]") {
       Future.delayed(Duration(milliseconds: 500), () {
         try {
-          if (allMsg) {
-            allMsg = false;
+          if (widget.allMsg) {
+            widget.allMsg = false;
             userCache.conn1.query("get unreceivedmsgsaboutme");
           } else {
             userCache.conn1.query("get unreceivedmsgsaboutme");
@@ -50,7 +58,7 @@ class _MessageState extends State<MessagePage> {
     try {
       parsed = json.decode(data);
     } catch (e) {
-      if (allMsg) {
+      if (widget.allMsg) {
         userCache.conn1.query("get allmsgsaboutme");
       } else {
         userCache.conn1.query("get unreceivedmsgsaboutme");
@@ -68,7 +76,7 @@ class _MessageState extends State<MessagePage> {
         map['time'],
       ));
     }
-    if (!allMsg) {
+    if (!widget.allMsg) {
       for (var msg in messages) {
         if (msg.from==userCache.un) {
           continue;
@@ -83,7 +91,7 @@ class _MessageState extends State<MessagePage> {
     }
     var found = false;
     for (var msg in messages) {
-      for (var contact in contacts) {
+      for (var contact in widget.contacts) {
         if ((contact.from==msg.from&&contact.to==msg.to)||(contact.from==msg.to&&contact.to==msg.from)) {
           contact.contents.add(msg.content);
           contact.isWithdrews.add(msg.isWithdrew);
@@ -96,7 +104,7 @@ class _MessageState extends State<MessagePage> {
         found = false;
         continue;
       } else {
-        contacts.add(
+        widget.contacts.add(
             MessageList(
               makeListWithFirstElementSet(msg.content),
               msg.from,
@@ -107,8 +115,24 @@ class _MessageState extends State<MessagePage> {
         );
       }
     }
+    updateMessageShowers();
+    if (widget.allMsg) {
+      widget.allMsg = false;
+    }
+    try {
+      setState((){
+      });
+    } catch (e) {}
+    Future.delayed(Duration(milliseconds: 500), () {
+      try {
+        userCache.conn1.query("get unreceivedmsgsaboutme");
+      } catch (e) {
+      }
+    });
+  }
+  void updateMessageShowers() {
     msgshowers.clear();
-    for (var msgl in contacts) {
+    for (var msgl in widget.contacts) {
       msgshowers.add(Column(
         children: <Widget>[
           Row(
@@ -129,18 +153,6 @@ class _MessageState extends State<MessagePage> {
         push(context, TalkPage(TalkSettings(msgl.from, msgl.to), userCache));
       });
     }
-    if (allMsg) {
-      allMsg = false;
-    }
-    try {
-      setState((){});
-    } catch (e) {}
-    Future.delayed(Duration(milliseconds: 500), () {
-      try {
-        userCache.conn1.query("get unreceivedmsgsaboutme");
-      } catch (e) {
-      }
-    });
   }
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:can_mobile/files/files.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -60,36 +61,33 @@ class _LoginState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    createFiles();
+    try {
+      checkForDirectories();
+    } catch (e) {
+      if (Platform.isAndroid) {
+        push(context, AndroidStoragePermissionRequestPage());
+      }
+    }
     __loginState = this;
   }
-  void createFiles() async {
-    try {
-      final candir = await openCanFolder();
-      final cache = Directory("$candir/cache");
-      final properties = File("$candir/can.properties");
-      if (!cache.existsSync()) {
-        cache.createSync(recursive: true);
-      }
-      if (!properties.existsSync()) {
-        properties.createSync(recursive: true);
-      }
-    } catch (e) {
-      push(context, AndroidStoragePermissionRequestPage());
-    }
-  }
   void autoLogin() async {
-    final candir = await openCanFolder();
-    final read = File("$candir/can.properties").readAsLinesSync();
     String un;
     String pw;
-    if (read.isNotEmpty) {
-      for (final ln in read) {
-        final sp = ln.split("=");
-        switch (sp[0]) {
-          case "username":un=sp[1];break;
-          case "password":pw=sp[1];break;
+    try {
+      final candir = await openCanFolder();
+      final read = File("$candir/can.properties").readAsLinesSync();
+      if (read.isNotEmpty) {
+        for (final ln in read) {
+          final sp = ln.split("=");
+          switch (sp[0]) {
+            case "username":un=sp[1];break;
+            case "password":pw=sp[1];break;
+          }
         }
+      }
+    } catch (e) {
+      if (Platform.isAndroid) {
+        push(context, AndroidStoragePermissionRequestPage());
       }
     }
     if (un!=null&&pw!=null) {
