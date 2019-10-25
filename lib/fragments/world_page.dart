@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:can_mobile/message/send_page.dart';
+import 'package:can_mobile/widget/user_head.dart';
+
 import '../blogs/write_blog_page.dart';
 import '../kits/toolkits.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,8 +49,11 @@ class _WorldState extends State<WorldPage> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    ClipOval(
-                      child: Image.asset("images/defaultusericon.png", width: 50, height: 50,),
+                    UserHead(
+                      context,
+                      widget.userCache,
+                      i.owner,
+                      Image.asset("images/defaultusericon.png", width: 50, height: 50,),
                     ),
                     Column(
                       children: <Widget>[
@@ -73,7 +79,7 @@ class _WorldState extends State<WorldPage> {
                                 ),
                               ),
                               onTap: () {
-                                //TODO Message Him
+                                push(context, SendPage(widget.userCache, user: i.owner));
                               },
                             ),
                           ],

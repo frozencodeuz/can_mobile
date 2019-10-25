@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:can_mobile/widget/user_head.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart' as notification;
 
@@ -22,6 +23,7 @@ class _MessageState extends State<MessagePage> {
   UserCache userCache;
   _MessageState(this.userCache);
   List<Widget> msgshowers = List();
+  List<String> usernames = List();
   List<VoidCallback> pushToMessagePage = List();
   @override
   void initState() {
@@ -133,12 +135,13 @@ class _MessageState extends State<MessagePage> {
   void updateMessageShowers() {
     msgshowers.clear();
     for (var msgl in widget.contacts) {
+      final theUn = msgl.from==userCache.un?msgl.to:msgl.from;
       msgshowers.add(Column(
         children: <Widget>[
           Row(
             children: <Widget>[
               Text(
-                msgl.from==userCache.un?msgl.to:msgl.from,
+                theUn,
                 style: TextStyle(
                     fontSize: 30
                 ),
@@ -149,6 +152,7 @@ class _MessageState extends State<MessagePage> {
           Text(msgl.times[msgl.times.length-1]),
         ],
       ));
+      usernames.add(theUn);
       pushToMessagePage.add(() {
         push(context, TalkPage(TalkSettings(msgl.from, msgl.to), userCache));
       });
@@ -160,7 +164,7 @@ class _MessageState extends State<MessagePage> {
         itemCount: msgshowers.length,
         itemBuilder: (context, index) {
           return ListTile(
-              leading: Image.asset("images/defaultusericon.png"),
+              leading: UserHead(context, userCache, usernames[index], Image.asset("images/defaultusericon.png")),
               title: msgshowers[index],
               onTap: pushToMessagePage[index]
           );

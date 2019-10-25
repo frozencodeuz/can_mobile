@@ -134,3 +134,27 @@ void microTip(BuildContext context, String tip) {
       }
   );
 }
+
+String removePrefix(String string, String prefix) {
+  if (string.startsWith(prefix)) {
+    return string.substring(prefix.length, string.length);
+  }
+  return string;
+}
+
+String removeSuffix(String string, String suffix) {
+  if (string.endsWith(suffix)) {
+    return string.substring(0, string.length - suffix.length);
+  }
+  return string;
+}
+
+List<String> cleanStringList(List<String> list) {
+  List<String> newList = list.toList();
+  list.forEach((i) {
+    if (i==""||i==null) {
+      newList.remove(i);
+    }
+  });
+  return newList;
+}

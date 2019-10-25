@@ -2,11 +2,8 @@ import 'package:can_mobile/widget/user_tile.dart';
 import 'package:flutter/material.dart';
 
 import '../kits/toolkits.dart';
-import '../widget/im_item.dart';
 import '../kits/user_cache.dart';
 import '../users/person_data_page.dart';
-import '../applications/about_can.dart';
-import '../main.dart';
 
 class PersonalPage extends StatefulWidget {
   UserCache userCache;
@@ -33,76 +30,8 @@ class _PersonalState extends State<PersonalPage> {
           UserTile(
             userCache,
             userCache.un,
-            () => push(context, PersonDataPage(userCache)),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 20.0),
-            color: Colors.white,
-            child: ImItem(
-              title: '好友动态',
-              icon: Icon(Icons.star),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 20.0),
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                ImItem(
-                  icon: Icon(Icons.insert_drive_file),
-                  title: '我的文件',
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: Divider(
-                    height: 0.5,
-                    color: Color(0xFFd9d9d9),
-                  ),
-                ),
-                ImItem(
-                  icon: Icon(Icons.update),
-                  title: '检查更新',
-                  onPressed: () {
-                    userCache.conn.callBack = (data) {
-                      tipsDialog(context, data);
-                    };
-                    userCache.conn.query("verinfo");
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: Divider(
-                    height: 0.5,
-                    color: Color(0xFFd9d9d9),
-                  ),
-                ),
-                ImItem(
-                  icon: Icon(Icons.change_history),
-                  title: '关于 Can',
-                  onPressed: () {
-                    push(context, AboutCanPage());
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: Divider(
-                    height: 0.5,
-                    color: Color(0xFFd9d9d9),
-                  ),
-                ),
-                ImItem(
-                  icon: Icon(Icons.exit_to_app),
-                  title: '退出登录',
-                  onPressed: () {
-                    pushAndRemove(context, LoginPage());
-                    userCache.conn.query("close");
-                    userCache.conn.close();
-                    userCache.conn1.query("close");
-                    userCache.conn1.close();
-                  },
-                ),
-              ],
-            ),
+            onTap: () => push(context, PersonDataPage(userCache)),
+            isSelf: true,
           ),
         ],
       ),

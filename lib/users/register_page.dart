@@ -71,8 +71,12 @@ class _RegisterState extends State<RegisterPage> {
                     return;
                   } else if (newUN.indexOf(" ")!=-1) {
                     snake("用户名不能包含空格", Scaffold.of(context), 2);
+                  } else if (newUN.indexOf("/")!=-1) {
+                    snake("用户名不能包含斜杠", Scaffold.of(context), 2);
                   } else if (newUN.indexOf("\"")!=-1) {
-                    snake("用户名不能包含引号", Scaffold.of(context), 2);
+                    snake("用户名不能包含双引号", Scaffold.of(context), 2);
+                  } else if (newUN.indexOf("'")!=-1) {
+                    snake("用户名不能包含单引号", Scaffold.of(context), 2);
                   } else {
                     register(context);
                   }
