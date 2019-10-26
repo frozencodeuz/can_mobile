@@ -9,10 +9,6 @@
 
 - 请下载本项目，并将它解压。
 
-- 配置好您的服务器，详见[warpin_server](https://github.com/warpinstudio/warpin_server)
-
-- 在lib/constraints.dart里输入您服务器的IP号与端口号。
-
 - 打开里面的ios/android模块，即可直接运行。
 ## 结尾
 本篇README如有任何错误，请立刻指出，谢谢！

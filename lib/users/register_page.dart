@@ -11,6 +11,7 @@ import '../constraints.dart';
 String newUN = "";
 String newPW = "";
 String newPWConf = "";
+String newPhone = "";
 
 class RegisterPage extends StatefulWidget {
   RegisterPage();
@@ -36,6 +37,15 @@ class _RegisterState extends State<RegisterPage> {
                   ),
                   onChanged: (text) {
                     newUN = text;
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.phone),
+                      labelText: "手机号"
+                  ),
+                  onChanged: (text) {
+                    newPhone = text;
                   },
                 ),
                 TextField(
@@ -77,6 +87,8 @@ class _RegisterState extends State<RegisterPage> {
                     snake("用户名不能包含双引号", Scaffold.of(context), 2);
                   } else if (newUN.indexOf("'")!=-1) {
                     snake("用户名不能包含单引号", Scaffold.of(context), 2);
+                  } else if (newPhone=="") {
+                    snake("手机号不能为空", Scaffold.of(context));
                   } else {
                     register(context);
                   }
@@ -100,7 +112,7 @@ class _RegisterState extends State<RegisterPage> {
         tipsDialog(context, "您的用户名已经被使用过");
       }
     };
-    connection.query("register $newUN $newPW");
+    connection.query("register $newUN $newPW $newPhone");
     connection.close();
   }
 }
