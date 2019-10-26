@@ -44,30 +44,7 @@ class _OtherUserDataPageState extends State<OtherUserDataPage> {
       (isVisible?Column(
         children: <Widget>[
           UserTile(widget.userCache, widget.name, onTap: () {}, parsedJson: parsedJson, isSelf: false,),
-          Card(
-            child: Column(
-              children: <Widget>[
-                Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("电话"),
-                    VerticalDivider(),
-                    Text(parsedJson['phone']),
-                  ],
-                ),
-                Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("生日"),
-                    VerticalDivider(),
-                    Text(parsedJson['birthday']),
-                  ],
-                ),
-              ],
-            ),
-          ),
+
         ],
       ):Center(
         child: Text("该用户不存在"),

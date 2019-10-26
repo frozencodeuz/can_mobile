@@ -37,7 +37,7 @@ class AboutCanPage extends StatelessWidget {
               child: GestureDetector(
                 child: Icon(Icons.web, color: Colors.black,),
                 onTap: () {
-                  tipsDialog(context, "官网尚未架设");
+                  goToWebSite();
                 },
               )
             ),

@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:quartz_doc/quartz_doc.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:device_info/device_info.dart' as device_info;
-
-import '../main_page.dart';
-import 'user_cache.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 String makeAListString<E>(List<E> list) {
   StringBuffer sb = StringBuffer("");
@@ -157,4 +155,13 @@ List<String> cleanStringList(List<String> list) {
     }
   });
   return newList;
+}
+
+void goToWebSite() async {
+  /*const url = 'https://flutter.io';
+  if (await url_launcher.canLaunch(url)) {
+    await url_launcher.launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }*/
 }

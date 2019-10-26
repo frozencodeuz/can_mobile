@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:can_mobile/applications/applications_page.dart';
+import 'package:can_mobile/constraints.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -102,6 +103,58 @@ class _MainPageState extends State<MainPage> {
             ImItem(
               icon: Icon(Icons.update),
               title: '检查更新',
+              onPressed: () {
+                userCache.conn.callBack = (data) {
+                  final split = data.split(" ");
+                  final vercode = int.parse(split[0]);
+                  final vername = split[1];
+                  final log = split[3];
+                  if (vercode==VERSION_CODE) {
+                    microTip(context, "您已经是最新版本了");
+                  } else if (vercode>VERSION_CODE) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoAlertDialog(
+                          title: Text("软件有新版本"),
+                          content: Text("$vername\n$log"),
+                          actions: <Widget>[
+                            CupertinoButton(
+                              child: Text("更新"),
+                              onPressed: () {
+                                if (Platform.isAndroid) {
+                                  microTip(context, "请前往官网下载新版本");
+                                  Navigator.pop(context);
+                                } else if (Platform.isIOS) {
+                                  microTip(context, "iOS系统暂不支持更新");
+                                  Navigator.pop(context);
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      }
+                    );
+                  } else {
+                    microTip(context, "出现信息混乱，可能是服务器出现bug");
+                  }
+                };
+                userCache.conn.query("verinfo");
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+              child: Divider(
+                height: 0.5,
+                color: Color(0xFFd9d9d9),
+              ),
+            ),
+            ImItem(
+              icon: Icon(Icons.web),
+              title: "前往官网",
+              onPressed: () {
+                goToWebSite();
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15.0, right: 15.0),

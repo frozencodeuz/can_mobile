@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:can_mobile/kits/toolkits.dart';
+import 'package:can_mobile/users/other_user_detail_page.dart';
 import 'package:can_mobile/widget/fancy_button.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +50,11 @@ class _UserTileState extends State<UserTile> {
       ),
       title: Column(
         children: <Widget>[
-          Row(
+          widget.isSelf?Row(
+            children: <Widget>[
+              Text(widget.userName)
+            ],
+          ):Row(
             children: <Widget>[
               Text(widget.userName),
               Expanded(
@@ -68,7 +74,7 @@ class _UserTileState extends State<UserTile> {
                 iconData: Icons.assignment,
                 suffix: Text("详细资料"),
                 onPressed: () {
-                  // TODO Detail
+                  push(context, OtherUserDetailPage(widget.userName, map, widget.userCache));
                 },
               ),
             ],
